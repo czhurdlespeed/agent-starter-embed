@@ -94,6 +94,44 @@ export const APP_CONFIG_DEFAULTS = {
 
 You can update these values in [`app-config.ts`](./app-config.ts) to customize branding, features, and UI text for your deployment.
 
+#### Passing user data from your application (embed URL)
+
+When embedding the iframe in your app, you can pass user data to the agent via query parameters. The agent receives this as job metadata (e.g. for personalized greetings).
+
+**Example:** In your application, link or embed the iframe with `name` and `email`:
+
+```
+https://your-embed-domain.com/embed?name=Jon&email=jon@example.com
+```
+
+Your app might generate this URL when the user is logged in, for example:
+
+```html
+<iframe
+  src="https://your-embed-domain.com/embed?name=Jane&email=jane@example.com"
+  allow="microphone"
+  title="Voice agent"
+/>
+```
+
+Only include parameters you need; the connection-details API and agent receive whatever you pass.
+
+**Popup script:** To pass user data when using the popup embed, add optional data attributes to the script tag:
+
+```html
+<script
+  src="https://your-embed-domain.com/embed-popup.js"
+  data-lk-sandbox-id="your-sandbox-id"
+  data-lk-name="Jane"
+  data-lk-email="jane@example.com"
+></script>
+```
+
+- `data-lk-name` – optional; user’s name (sent to agent as job metadata).
+- `data-lk-email` – optional; user’s email (sent to agent as job metadata).
+
+Omit either attribute if you don’t need it. Rebuild the popup script after changes: `pnpm build-embed-popup-script`.
+
 #### Environment Variables
 
 You'll also need to configure your LiveKit credentials in `.env.local` (copy `.env.example` if you don't have one):

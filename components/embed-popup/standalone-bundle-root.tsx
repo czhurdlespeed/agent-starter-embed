@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom/client';
 import { getAppConfig } from '@/lib/env';
+import type { EmbedUserData } from '@/lib/types';
 import globalCss from '@/styles/globals.css';
 import EmbedFixedAgentClient from './agent-client';
 
@@ -24,8 +25,18 @@ if (sandboxIdAttribute) {
   const reactRoot = document.createElement('div');
   shadowRoot.appendChild(reactRoot);
 
+  // Optional user data from script tag: data-lk-name, data-lk-email (passed to agent as job metadata)
+  const userData: EmbedUserData = {};
+  const name = scriptTag?.dataset.lkName;
+  const email = scriptTag?.dataset.lkEmail;
+  if (name !== undefined) userData.name = name;
+  if (email !== undefined) userData.email = email;
+
   getAppConfig(window.location.origin, sandboxIdAttribute)
     .then((appConfig) => {
+      if (Object.keys(userData).length > 0) {
+        appConfig.userData = userData;
+      }
       const root = ReactDOM.createRoot(reactRoot);
       root.render(<EmbedFixedAgentClient appConfig={appConfig} />);
     })

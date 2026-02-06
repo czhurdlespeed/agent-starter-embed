@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
-import { AccessToken, type AccessTokenOptions, type VideoGrant } from 'livekit-server-sdk';
-import { RoomConfiguration } from '@livekit/protocol';
+import {
+  AccessToken,
+  AgentDispatchClient,
+  type AccessTokenOptions,
+  type VideoGrant,
+} from 'livekit-server-sdk';
 
 // NOTE: you are expected to define the following environment variables in `.env.local`:
 const API_KEY = process.env.LIVEKIT_API_KEY;
@@ -29,26 +33,41 @@ export async function POST(req: Request) {
       throw new Error('LIVEKIT_API_SECRET is not defined');
     }
 
-    // Parse agent configuration from request body
+    // Parse agent configuration and optional user data from request body
     const body = await req.json();
-    const agentName: string = body?.room_config?.agents?.[0]?.agent_name;
+    const agentName: string | undefined = body?.room_config?.agents?.[0]?.agent_name;
+    const userData =
+      body?.name !== undefined || body?.email !== undefined
+        ? { name: body?.name, email: body?.email }
+        : undefined;
+    const agentMetadata = userData ? JSON.stringify(userData) : '';
 
-    // Generate participant token
-    const participantName = 'user';
+    const participantName =
+      typeof body?.name === 'string' && body.name ? body.name : 'user';
     const participantIdentity = `voice_assistant_user_${Math.floor(Math.random() * 10_000)}`;
     const roomName = `voice_assistant_room_${Math.floor(Math.random() * 10_000)}`;
 
+    // Use explicit dispatch so metadata is sent to the agent (token roomConfig metadata is not forwarded in some setups).
+    if (agentName) {
+      const agentDispatch = new AgentDispatchClient(
+        LIVEKIT_URL,
+        API_KEY,
+        API_SECRET
+      );
+      await agentDispatch.createDispatch(roomName, agentName, {
+        metadata: agentMetadata,
+      });
+    }
+
     const participantToken = await createParticipantToken(
       { identity: participantIdentity, name: participantName },
-      roomName,
-      agentName
+      roomName
     );
 
-    // Return connection details
     const data: ConnectionDetails = {
       serverUrl: LIVEKIT_URL,
       roomName,
-      participantToken: participantToken,
+      participantToken,
       participantName,
     };
     const headers = new Headers({
@@ -65,8 +84,7 @@ export async function POST(req: Request) {
 
 function createParticipantToken(
   userInfo: AccessTokenOptions,
-  roomName: string,
-  agentName?: string
+  roomName: string
 ): Promise<string> {
   const at = new AccessToken(API_KEY, API_SECRET, {
     ...userInfo,
@@ -80,12 +98,5 @@ function createParticipantToken(
     canSubscribe: true,
   };
   at.addGrant(grant);
-
-  if (agentName) {
-    at.roomConfig = new RoomConfiguration({
-      agents: [{ agentName }],
-    });
-  }
-
   return at.toJwt();
 }

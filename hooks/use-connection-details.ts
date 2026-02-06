@@ -35,9 +35,13 @@ export default function useConnectionDetails(appConfig: AppConfig) {
         body: JSON.stringify({
           room_config: appConfig.agentName
             ? {
-                agents: [{ agent_name: appConfig.agentName }],
-              }
+              agents: [{ agent_name: appConfig.agentName }],
+            }
             : undefined,
+          ...(appConfig.userData && {
+            name: appConfig.userData.name,
+            email: appConfig.userData.email,
+          }),
         }),
       });
       data = await res.json();
