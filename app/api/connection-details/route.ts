@@ -14,6 +14,20 @@ const LIVEKIT_URL = process.env.LIVEKIT_URL;
 // don't cache the results
 export const revalidate = 0;
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, X-Sandbox-Id',
+  'Access-Control-Max-Age': '86400',
+} as const;
+
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: CORS_HEADERS,
+  });
+}
+
 export type ConnectionDetails = {
   serverUrl: string;
   roomName: string;
@@ -69,12 +83,16 @@ export async function POST(req: Request) {
     };
     const headers = new Headers({
       'Cache-Control': 'no-store',
+      ...CORS_HEADERS,
     });
     return NextResponse.json(data, { headers });
   } catch (error) {
     if (error instanceof Error) {
       console.error(error);
-      return new NextResponse(error.message, { status: 500 });
+      return new NextResponse(error.message, {
+        status: 500,
+        headers: CORS_HEADERS,
+      });
     }
   }
 }

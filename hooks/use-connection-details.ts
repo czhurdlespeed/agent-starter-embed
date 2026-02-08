@@ -19,10 +19,15 @@ export default function useConnectionDetails(appConfig: AppConfig) {
 
   const fetchConnectionDetails = useCallback(async () => {
     setConnectionDetails(null);
-    const url = new URL(
-      process.env.NEXT_PUBLIC_CONN_DETAILS_ENDPOINT ?? '/api/connection-details',
-      window.location.origin
-    );
+    // Auto-fill from VERCEL_URL when deployed to Vercel (preview or production)
+    const endpoint =
+      process.env.NEXT_PUBLIC_CONN_DETAILS_ENDPOINT ??
+      (process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}/api/connection-details`
+        : '/api/connection-details');
+    const url = endpoint.startsWith('http')
+      ? new URL(endpoint)
+      : new URL(endpoint, window.location.origin);
 
     let data: ConnectionDetails;
     try {
