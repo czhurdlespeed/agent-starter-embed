@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { decodeJwt } from 'jose';
 import { ConnectionDetails } from '@/app/api/connection-details/route';
 import { AppConfig } from '@/lib/types';
@@ -39,8 +39,7 @@ export default function useConnectionDetails(appConfig: AppConfig) {
             }
             : undefined,
           ...(appConfig.userData && {
-            name: appConfig.userData.name,
-            email: appConfig.userData.email,
+            user_id: appConfig.userData.user_id,
           }),
         }),
       });
@@ -53,10 +52,6 @@ export default function useConnectionDetails(appConfig: AppConfig) {
     setConnectionDetails(data);
     return data;
   }, []);
-
-  useEffect(() => {
-    fetchConnectionDetails();
-  }, [fetchConnectionDetails]);
 
   const isConnectionDetailsExpired = useCallback(() => {
     const token = connectionDetails?.participantToken;
@@ -82,9 +77,14 @@ export default function useConnectionDetails(appConfig: AppConfig) {
     }
   }, [connectionDetails, fetchConnectionDetails, isConnectionDetailsExpired]);
 
+  const clearConnectionDetails = useCallback(() => {
+    setConnectionDetails(null);
+  }, []);
+
   return {
     connectionDetails,
     refreshConnectionDetails: fetchConnectionDetails,
+    clearConnectionDetails,
     existingOrRefreshConnectionDetails,
   };
 }

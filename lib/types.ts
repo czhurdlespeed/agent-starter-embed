@@ -9,8 +9,7 @@ export type ThemeMode = 'dark' | 'light' | 'system';
 
 /** Optional user data passed from the parent app (e.g. via embed URL params) and sent to the agent as job metadata */
 export interface EmbedUserData {
-  name?: string;
-  email?: string;
+  user_id?: string;
 }
 
 export interface AppConfig {
@@ -27,10 +26,10 @@ export interface AppConfig {
 
 export interface SandboxConfig {
   [key: string]:
-    | { type: 'string'; value: string }
-    | { type: 'number'; value: number }
-    | { type: 'boolean'; value: boolean }
-    | null;
+  | { type: 'string'; value: string }
+  | { type: 'number'; value: number }
+  | { type: 'boolean'; value: boolean }
+  | null;
 }
 
 export type EmbedErrorDetails = { title: React.ReactNode; description: React.ReactNode };

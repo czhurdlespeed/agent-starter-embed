@@ -102,7 +102,7 @@ export const PopupView = ({
           description: <p className="w-full">{reason}</p>,
         });
       }
-    }, 10_000);
+    }, 25_000);
 
     return () => clearTimeout(timeout);
   }, [agentState, sessionStarted, room, onEmbedError]);

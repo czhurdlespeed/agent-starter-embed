@@ -21,7 +21,7 @@ function AgentClient({ appConfig }: EmbedFixedAgentClientProps) {
   const room = useMemo(() => new Room(), []);
   const [popupOpen, setPopupOpen] = useState(false);
   const [error, setError] = useState<EmbedErrorDetails | null>(null);
-  const { connectionDetails, refreshConnectionDetails, existingOrRefreshConnectionDetails } =
+  const { clearConnectionDetails, existingOrRefreshConnectionDetails } =
     useConnectionDetails(appConfig);
 
   const handleTogglePopup = () => {
@@ -48,7 +48,7 @@ function AgentClient({ appConfig }: EmbedFixedAgentClientProps) {
   useEffect(() => {
     const onDisconnected = () => {
       setPopupOpen(false);
-      refreshConnectionDetails();
+      clearConnectionDetails();
     };
     const onMediaDevicesError = (error: Error) => {
       setError({
@@ -62,17 +62,10 @@ function AgentClient({ appConfig }: EmbedFixedAgentClientProps) {
       room.off(RoomEvent.Disconnected, onDisconnected);
       room.off(RoomEvent.MediaDevicesError, onMediaDevicesError);
     };
-  }, [room, refreshConnectionDetails]);
+  }, [room, clearConnectionDetails]);
 
   useEffect(() => {
     if (!popupOpen) {
-      return;
-    }
-    if (!connectionDetails) {
-      setError({
-        title: 'Error fetching connection details',
-        description: 'Please try again later',
-      });
       return;
     }
     if (room.state !== 'disconnected') {
@@ -102,7 +95,6 @@ function AgentClient({ appConfig }: EmbedFixedAgentClientProps) {
   }, [
     room,
     popupOpen,
-    connectionDetails,
     existingOrRefreshConnectionDetails,
     appConfig.isPreConnectBufferEnabled,
   ]);

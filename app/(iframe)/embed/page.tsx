@@ -15,13 +15,9 @@ export default async function Embed({ searchParams }: EmbedPageProps) {
   const params = await searchParams;
 
   const userData: EmbedUserData = {};
-  const name = typeof params.name === 'string' ? params.name : undefined;
-  const email = typeof params.email === 'string' ? params.email : undefined;
-  if (name !== undefined) userData.name = name;
-  if (email !== undefined) userData.email = email;
-  if (Object.keys(userData).length > 0) {
-    appConfig.userData = userData;
-  }
+  const user_id = typeof params.user_id === 'string' ? params.user_id : undefined;
+  if (user_id !== undefined) userData.user_id = user_id;
+  if (user_id !== undefined) appConfig.userData = userData;
 
   return (
     <>

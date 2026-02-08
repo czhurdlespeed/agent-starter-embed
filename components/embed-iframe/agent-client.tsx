@@ -21,14 +21,15 @@ interface AppProps {
 function EmbedAgentClient({ appConfig }: AppProps) {
   const room = useMemo(() => new Room(), []);
   const [sessionStarted, setSessionStarted] = useState(false);
-  const { connectionDetails, refreshConnectionDetails } = useConnectionDetails(appConfig);
+  const { clearConnectionDetails, existingOrRefreshConnectionDetails } =
+    useConnectionDetails(appConfig);
 
   const [currentError, setCurrentError] = useState<EmbedErrorDetails | null>(null);
 
   useEffect(() => {
     const onDisconnected = () => {
       setSessionStarted(false);
-      refreshConnectionDetails();
+      clearConnectionDetails();
     };
     const onMediaDevicesError = (error: Error) => {
       setCurrentError({
@@ -42,7 +43,7 @@ function EmbedAgentClient({ appConfig }: AppProps) {
       room.off(RoomEvent.Disconnected, onDisconnected);
       room.off(RoomEvent.MediaDevicesError, onMediaDevicesError);
     };
-  }, [room, refreshConnectionDetails]);
+  }, [room, clearConnectionDetails]);
 
   useEffect(() => {
     if (!sessionStarted) {
@@ -51,12 +52,10 @@ function EmbedAgentClient({ appConfig }: AppProps) {
     if (room.state !== 'disconnected') {
       return;
     }
-    if (!connectionDetails) {
-      return;
-    }
 
     const connect = async () => {
       try {
+        const connectionDetails = await existingOrRefreshConnectionDetails();
         await room.connect(connectionDetails.serverUrl, connectionDetails.participantToken);
         await room.localParticipant.setMicrophoneEnabled(true, undefined, {
           preConnectBuffer: appConfig.isPreConnectBufferEnabled,
@@ -75,7 +74,7 @@ function EmbedAgentClient({ appConfig }: AppProps) {
     return () => {
       room.disconnect();
     };
-  }, [room, sessionStarted, connectionDetails, appConfig.isPreConnectBufferEnabled]);
+  }, [room, sessionStarted, existingOrRefreshConnectionDetails, appConfig.isPreConnectBufferEnabled]);
 
   return (
     <div className="bg-background relative h-16 rounded-full border px-3">

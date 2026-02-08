@@ -27,10 +27,8 @@ if (sandboxIdAttribute) {
 
   // Optional user data from script tag: data-lk-name, data-lk-email (passed to agent as job metadata)
   const userData: EmbedUserData = {};
-  const name = scriptTag?.dataset.lkName;
-  const email = scriptTag?.dataset.lkEmail;
-  if (name !== undefined) userData.name = name;
-  if (email !== undefined) userData.email = email;
+  const user_id = scriptTag?.dataset.lkUserId;
+  if (user_id !== undefined) userData.user_id = user_id;
 
   getAppConfig(window.location.origin, sandboxIdAttribute)
     .then((appConfig) => {

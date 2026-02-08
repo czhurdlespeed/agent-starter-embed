@@ -36,10 +36,7 @@ export async function POST(req: Request) {
     // Parse agent configuration and optional user data from request body
     const body = await req.json();
     const agentName: string | undefined = body?.room_config?.agents?.[0]?.agent_name;
-    const userData =
-      body?.name !== undefined || body?.email !== undefined
-        ? { name: body?.name, email: body?.email }
-        : undefined;
+    const userData = body?.user_id ? { user_id: body.user_id } : undefined;
     const agentMetadata = userData ? JSON.stringify(userData) : '';
 
     const participantName =
