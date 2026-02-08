@@ -40,8 +40,8 @@ export default function useConnectionDetails(appConfig: AppConfig) {
         body: JSON.stringify({
           room_config: appConfig.agentName
             ? {
-              agents: [{ agent_name: appConfig.agentName }],
-            }
+                agents: [{ agent_name: appConfig.agentName }],
+              }
             : undefined,
           ...(appConfig.userData && {
             user_id: appConfig.userData.user_id,

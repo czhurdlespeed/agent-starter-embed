@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import {
   AccessToken,
-  AgentDispatchClient,
   type AccessTokenOptions,
+  AgentDispatchClient,
   type VideoGrant,
 } from 'livekit-server-sdk';
 
@@ -53,18 +53,13 @@ export async function POST(req: Request) {
     const userData = body?.user_id ? { user_id: body.user_id } : undefined;
     const agentMetadata = userData ? JSON.stringify(userData) : '';
 
-    const participantName =
-      typeof body?.name === 'string' && body.name ? body.name : 'user';
+    const participantName = typeof body?.name === 'string' && body.name ? body.name : 'user';
     const participantIdentity = `voice_assistant_user_${Math.floor(Math.random() * 10_000)}`;
     const roomName = `voice_assistant_room_${Math.floor(Math.random() * 10_000)}`;
 
     // Use explicit dispatch so metadata is sent to the agent (token roomConfig metadata is not forwarded in some setups).
     if (agentName) {
-      const agentDispatch = new AgentDispatchClient(
-        LIVEKIT_URL,
-        API_KEY,
-        API_SECRET
-      );
+      const agentDispatch = new AgentDispatchClient(LIVEKIT_URL, API_KEY, API_SECRET);
       await agentDispatch.createDispatch(roomName, agentName, {
         metadata: agentMetadata,
       });
@@ -97,10 +92,7 @@ export async function POST(req: Request) {
   }
 }
 
-function createParticipantToken(
-  userInfo: AccessTokenOptions,
-  roomName: string
-): Promise<string> {
+function createParticipantToken(userInfo: AccessTokenOptions, roomName: string): Promise<string> {
   const at = new AccessToken(API_KEY, API_SECRET, {
     ...userInfo,
     ttl: '15m',

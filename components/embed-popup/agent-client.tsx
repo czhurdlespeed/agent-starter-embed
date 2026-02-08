@@ -92,12 +92,7 @@ function AgentClient({ appConfig }: EmbedFixedAgentClientProps) {
     };
 
     connect();
-  }, [
-    room,
-    popupOpen,
-    existingOrRefreshConnectionDetails,
-    appConfig.isPreConnectBufferEnabled,
-  ]);
+  }, [room, popupOpen, existingOrRefreshConnectionDetails, appConfig.isPreConnectBufferEnabled]);
 
   return (
     <RoomContext.Provider value={room}>

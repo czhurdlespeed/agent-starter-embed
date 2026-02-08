@@ -74,7 +74,12 @@ function EmbedAgentClient({ appConfig }: AppProps) {
     return () => {
       room.disconnect();
     };
-  }, [room, sessionStarted, existingOrRefreshConnectionDetails, appConfig.isPreConnectBufferEnabled]);
+  }, [
+    room,
+    sessionStarted,
+    existingOrRefreshConnectionDetails,
+    appConfig.isPreConnectBufferEnabled,
+  ]);
 
   return (
     <div className="bg-background relative h-16 rounded-full border px-3">
