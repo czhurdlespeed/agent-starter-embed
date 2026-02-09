@@ -35,6 +35,16 @@ if (sandboxIdAttribute) {
       if (Object.keys(userData).length > 0) {
         appConfig.userData = userData;
       }
+      // Derive connection-details URL from script src so it works on any domain (e.g. preview deploys)
+      const scriptSrc = scriptTag?.src;
+      if (scriptSrc) {
+        try {
+          const origin = new URL(scriptSrc).origin;
+          appConfig.connectionDetailsEndpoint = `${origin}/api/connection-details`;
+        } catch {
+          // ignore
+        }
+      }
       const root = ReactDOM.createRoot(reactRoot);
       root.render(<EmbedFixedAgentClient appConfig={appConfig} />);
     })

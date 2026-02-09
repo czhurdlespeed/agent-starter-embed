@@ -17,6 +17,8 @@ export interface AppConfig {
   agentName?: string;
   /** User data to send with connection (e.g. from ?name=&email= on embed URL) */
   userData?: EmbedUserData;
+  /** Override for connection-details API (e.g. when embed runs on another site). If unset, derived at runtime from script src when possible. */
+  connectionDetailsEndpoint?: string;
 
   supportsChatInput: boolean;
   supportsVideoInput: boolean;

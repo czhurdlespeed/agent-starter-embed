@@ -19,8 +19,9 @@ export default function useConnectionDetails(appConfig: AppConfig) {
 
   const fetchConnectionDetails = useCallback(async () => {
     setConnectionDetails(null);
-    // Auto-fill from VERCEL_URL when deployed to Vercel (preview or production)
+    // Prefer: 1) app config (e.g. from script src in embed), 2) build-time env, 3) Vercel, 4) relative
     const endpoint =
+      appConfig.connectionDetailsEndpoint ??
       process.env.NEXT_PUBLIC_CONN_DETAILS_ENDPOINT ??
       (process.env.VERCEL_URL
         ? `https://${process.env.VERCEL_URL}/api/connection-details`
@@ -56,7 +57,7 @@ export default function useConnectionDetails(appConfig: AppConfig) {
 
     setConnectionDetails(data);
     return data;
-  }, []);
+  }, [appConfig.connectionDetailsEndpoint]);
 
   const isConnectionDetailsExpired = useCallback(() => {
     const token = connectionDetails?.participantToken;

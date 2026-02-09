@@ -154,6 +154,26 @@ These are required for the voice agent functionality to work with your LiveKit p
 
 http://localhost:3000 will respond to code changes in real time through [NextJS Fast Refresh](https://nextjs.org/docs/architecture/fast-refresh) to support a rapid iteration feedback loop.
 
+## Deploying so you can use the embed on another website
+
+To use the embed (iframe or popup script) on a **different** site, deploy this Next.js app first, then paste the embed code from your deployed app into that site.
+
+1. **Deploy the app** to a host (e.g. [Vercel](https://vercel.com), Netlify, or your own server).  
+   - On Vercel: connect your repo and deploy. The default `pnpm build` runs `next build && pnpm build-embed-popup-script`, so `embed-popup.js` is built as part of the deploy.
+
+2. **Set environment variables** on your host:
+   - **Required:** `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `LIVEKIT_URL`
+   - **Optional for embeds on other sites:**  
+     The popup embed script infers the connection-details URL at **runtime** from the script tag's `src` (e.g. `https://your-app.vercel.app/embed-popup.js` → `https://your-app.vercel.app/api/connection-details`). You do **not** need to set `NEXT_PUBLIC_CONN_DETAILS_ENDPOINT` for preview or production—each deploy URL works as-is. Override only if needed.
+
+3. No need to redeploy after adding env vars just for the endpoint; the script derives the URL from where it was loaded.
+
+4. **Copy the embed code** from your deployed app’s welcome page (e.g. `https://your-app.vercel.app`). Use the generated **script** tag (popup) or **iframe** snippet, then paste it into your other website.
+
+5. **Using the link:**  
+   - **Iframe:** Use the iframe URL from the welcome page, e.g. `https://your-app.vercel.app/embed` (add query params like `?name=Jane` if you pass user data).  
+   - **Popup:** Use the script tag shown on the welcome page; it loads `embed-popup.js` from your deployed domain and includes the correct `data-lk-sandbox-id`.
+
 ## Production deployment of embed-popup.js script
 
 Once your environment is set up and you've made any configuration changes, you can copy the embed code generated on the welcome page of your LiveKit Sandbox and paste it into your website.
