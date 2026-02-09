@@ -142,6 +142,10 @@ LIVEKIT_API_SECRET=your_livekit_api_secret
 LIVEKIT_URL=https://your-livekit-server-url
 
 NEXT_PUBLIC_CONN_DETAILS_ENDPOINT=http://localhost:3000/api/connection-details
+
+# Optional: URL for the popup trigger video (replaces LiveKit logo in the floating popup button).
+# Host on Cloudflare Stream, R2, or put a file at /public/welcome-video.mp4
+# NEXT_PUBLIC_WELCOME_VIDEO_URL=https://customer-xxxxx.cloudflarestream.com/xxxxx/manifest/video.m3u8
 ```
 
 These are required for the voice agent functionality to work with your LiveKit project.

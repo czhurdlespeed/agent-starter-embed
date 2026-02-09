@@ -48,6 +48,7 @@ type PopupProps = {
   disabled: boolean;
   sessionStarted: boolean;
   onEmbedError: React.Dispatch<React.SetStateAction<EmbedErrorDetails | null>>;
+  onAgentTimeout?: () => void;
 };
 
 export const PopupView = ({
@@ -55,6 +56,7 @@ export const PopupView = ({
   disabled,
   sessionStarted,
   onEmbedError,
+  onAgentTimeout,
   ref,
 }: React.ComponentProps<'div'> & PopupProps) => {
   useDebugMode();
@@ -84,7 +86,7 @@ export const PopupView = ({
   }
 
   // If the agent hasn't connected after an interval,
-  // then show an error - something must not be working
+  // return to intro video instead of showing an error
   useEffect(() => {
     if (!sessionStarted) {
       return;
@@ -92,20 +94,12 @@ export const PopupView = ({
 
     const timeout = setTimeout(() => {
       if (!isAgentAvailable(agentState)) {
-        const reason =
-          agentState === 'connecting'
-            ? 'Agent did not join the room. '
-            : 'Agent connected but did not complete initializing. ';
-
-        onEmbedError({
-          title: 'Session ended',
-          description: <p className="w-full">{reason}</p>,
-        });
+        onAgentTimeout?.();
       }
     }, 25_000);
 
     return () => clearTimeout(timeout);
-  }, [agentState, sessionStarted, room, onEmbedError]);
+  }, [agentState, sessionStarted, onAgentTimeout]);
 
   return (
     <div ref={ref} inert={disabled} className="flex h-full w-full flex-col overflow-hidden">
@@ -143,14 +137,14 @@ export const PopupView = ({
               }}
               animate={{
                 left: chatOpen && (isCameraEnabled || isScreenShareEnabled) ? '39%' : '50%',
-                scale: chatOpen ? 0.275 : 1,
+                scale: chatOpen ? 0.4 : 1,
                 top: chatOpen ? '12px' : '50%',
                 translateY: chatOpen ? '0' : '-50%',
                 transformOrigin: chatOpen ? 'center top' : 'center center',
               }}
               transition={TILE_TRANSITION}
               className={cn(
-                'bg-bg1 dark:bg-bg2 pointer-events-none absolute flex aspect-square w-64 items-center justify-center rounded-2xl border border-transparent transition-colors',
+                'bg-bg1 dark:bg-bg2 pointer-events-none absolute flex aspect-square w-20 md:w-40 items-center justify-center rounded-xl md:rounded-2xl border border-transparent transition-colors',
                 chatOpen && 'border-separator1 dark:border-separator2 drop-shadow-2xl'
               )}
             >
@@ -226,7 +220,7 @@ export const PopupView = ({
                 trackRef={agentVideoTrack}
                 width={agentVideoTrack?.publication.dimensions?.width ?? 0}
                 height={agentVideoTrack?.publication.dimensions?.height ?? 0}
-                className="aspect-square w-[70px] rounded-md bg-black object-cover"
+                className="aspect-square w-10 md:w-[70px] rounded-md bg-black object-cover"
               />
             </motion.div>
           )}
@@ -240,15 +234,15 @@ export const PopupView = ({
               initial={{
                 scale: 0.5,
                 opacity: 0,
-                right: '12px',
-                top: '346px',
+                right: '4px',
+                top: '55%',
                 transformOrigin: 'center bottom',
               }}
               animate={{
                 scale: 1,
                 opacity: 1,
-                top: chatOpen ? '12px' : '346px',
-                right: chatOpen ? '106px' : '12px',
+                top: chatOpen ? '8px' : '55%',
+                right: chatOpen ? '2rem' : '4px',
                 transformOrigin: chatOpen ? 'center top' : 'center bottom',
               }}
               exit={{
@@ -262,11 +256,11 @@ export const PopupView = ({
                 trackRef={cameraTrack || screenShareTrack}
                 width={(cameraTrack || screenShareTrack)?.publication.dimensions?.width ?? 0}
                 height={(cameraTrack || screenShareTrack)?.publication.dimensions?.height ?? 0}
-                className="aspect-square w-[70px] rounded-md bg-black object-cover"
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+className="aspect-square w-10 md:w-[70px] rounded-md bg-black object-cover"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
         {/* Action Bar */}
         <motion.div

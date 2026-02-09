@@ -4,6 +4,7 @@ import { PhoneDisconnectIcon, XIcon } from '@phosphor-icons/react';
 import { EmbedErrorDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
+import { VideoButton } from './video-button';
 
 const AnimatedButton = motion.create(Button);
 
@@ -11,9 +12,10 @@ interface TriggerProps {
   error: EmbedErrorDetails | null;
   popupOpen: boolean;
   onToggle: () => void;
+  startVideoMuted?: boolean;
 }
 
-export function Trigger({ error = null, popupOpen, onToggle }: TriggerProps) {
+export function Trigger({ error = null, popupOpen, onToggle, startVideoMuted = false }: TriggerProps) {
   const { state: agentState } = useVoiceAssistant();
 
   const isAgentConnecting =
@@ -44,27 +46,27 @@ export function Trigger({ error = null, popupOpen, onToggle }: TriggerProps) {
         }}
         onClick={onToggle}
         className={cn(
-          'relative m-0 block size-12 p-0.5 drop-shadow-md',
-          'scale-100 transition-[scale] duration-300 hover:scale-105 focus:scale-105',
-          'fixed right-4 bottom-4 z-50'
+          'relative m-0 block w-[140px] h-[180px] md:w-[224px] md:h-[288px] p-0 drop-shadow-md',
+          'scale-100 transition-[scale] duration-300 hover:scale-[1.02] focus:scale-[1.02]',
+          'rounded-xl',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8200] focus-visible:ring-offset-2'
         )}
       >
         {/* ring */}
         <motion.div
           className={cn(
-            'absolute inset-0 z-10 rounded-full transition-colors',
-            !popupOpen && 'bg-fgAccent',
-            !error &&
-              isAgentConnecting &&
-              'bg-fgAccent/30 animate-spin [background-image:conic-gradient(from_0deg,transparent_0%,transparent_30%,var(--color-fgAccent)_50%,transparent_70%,transparent_100%)]',
+            'absolute inset-0 z-10 rounded-xl overflow-hidden transition-colors',
+            !popupOpen && 'bg-[#FF8200]',
+            !error && isAgentConnecting && 'bg-bg1',
             (isAgentConnected || (error && popupOpen)) && 'bg-destructive-foreground'
           )}
         />
         {/* icon */}
         <div
           className={cn(
-            'relative z-20 grid size-11 place-items-center rounded-full transition-colors',
-            !popupOpen && 'bg-fgAccent',
+            'relative z-20 grid place-items-center rounded-xl overflow-hidden transition-colors',
+            'w-full h-full min-w-0 min-h-0',
+            !popupOpen && 'bg-transparent',
             !error && isAgentConnecting && 'bg-bg1',
             (isAgentConnected || (error && popupOpen)) && 'bg-destructive'
           )}
@@ -72,20 +74,13 @@ export function Trigger({ error = null, popupOpen, onToggle }: TriggerProps) {
           <AnimatePresence>
             {!popupOpen && (
               <motion.div
-                key="lk-logo"
+                key="video-button"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: popupOpen ? 20 : -20 }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                className="absolute inset-0"
               >
-                <div
-                  className="bg-bg1 size-5"
-                  // webpack build throws if I use custom tailwind classes to achive this
-                  style={{
-                    maskImage: 'url(/lk-logo.svg)',
-                    maskSize: 'contain',
-                  }}
-                />
+                <VideoButton asChild className="size-full rounded-lg" startMuted={startVideoMuted} />
               </motion.div>
             )}
             {(isAgentConnecting || (error && popupOpen)) && (
@@ -94,12 +89,11 @@ export function Trigger({ error = null, popupOpen, onToggle }: TriggerProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: popupOpen ? -20 : 20 }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[28px] md:size-11"
               >
                 <XIcon
-                  size={20}
                   weight="bold"
-                  className={cn('text-fg0 size-5', error && 'text-destructive-foreground')}
+                  className={cn('text-fg0 size-[13px] md:size-5', error && 'text-destructive-foreground')}
                 />
               </motion.div>
             )}
@@ -109,12 +103,11 @@ export function Trigger({ error = null, popupOpen, onToggle }: TriggerProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: popupOpen ? -20 : 20 }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[28px] md:size-11"
               >
                 <PhoneDisconnectIcon
-                  size={20}
                   weight="bold"
-                  className="text-destructive-foreground size-5"
+                  className="text-destructive-foreground size-[13px] md:size-5"
                 />
               </motion.div>
             )}

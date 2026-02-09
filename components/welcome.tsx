@@ -11,6 +11,13 @@ import { cn } from '@/lib/utils';
 import EmbedPopupAgentClient from './embed-popup/agent-client';
 import { ThemeToggle } from './theme-toggle';
 
+const popupTestConfig = {
+  ...APP_CONFIG_DEFAULTS,
+  userData: {
+    user_id: '123',
+  },
+};
+
 export default function Welcome() {
   const router = useRouter();
   const pathname = usePathname();
@@ -45,7 +52,8 @@ export default function Welcome() {
   const embedSandboxId = useMemo(() => getSandboxId(window.location.origin), []);
 
   const popupEmbedCode = useMemo(
-    () => `<script\n  src="${popupEmbedUrl}"\n  data-lk-sandbox-id="${embedSandboxId}"\n></script>`,
+    () =>
+      `<script\n  src="${popupEmbedUrl}"\n  data-lk-sandbox-id="${embedSandboxId}"\n data-lk-user-id="123"></script>`,
     [popupEmbedUrl, embedSandboxId]
   );
   const iframeEmbedCode = useMemo(() => {
@@ -215,7 +223,7 @@ export default function Welcome() {
                 />
               </div>
             </div>
-            <EmbedPopupAgentClient appConfig={APP_CONFIG_DEFAULTS} />
+            <EmbedPopupAgentClient appConfig={popupTestConfig} />
           </>
         )}
       </div>

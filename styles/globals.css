@@ -133,6 +133,16 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
+:host {
+  --ring: #FF8200;
+  --sidebar-ring: #FF8200;
+}
+
+:host(.dark) {
+  --ring: #FF8200;
+  --sidebar-ring: #FF8200;
+}
+
 @theme inline {
   --color-fg0: var(--fg0);
   --color-fg1: var(--fg1);

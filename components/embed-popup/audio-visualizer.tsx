@@ -13,11 +13,11 @@ export function AudioVisualizer({ agentState, audioTrack }: AudioVisualizerProps
       state={agentState}
       trackRef={audioTrack}
       options={{ minHeight: 5 }}
-      className="flex h-full w-auto items-center justify-center gap-3"
+      className="flex h-full w-auto items-center justify-center gap-2 md:gap-3"
     >
       <span
         className={cn([
-          'bg-muted min-h-6 w-6 rounded-full',
+          'bg-muted min-h-4 w-4 md:min-h-6 md:w-6 rounded-full',
           'origin-center transition-colors duration-250 ease-linear',
           'data-[lk-highlighted=true]:bg-foreground data-[lk-muted=true]:bg-muted',
         ])}

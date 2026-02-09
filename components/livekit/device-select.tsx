@@ -21,6 +21,7 @@ type DeviceSelectProps = React.ComponentProps<typeof SelectTrigger> & {
   onActiveDeviceChange?: (deviceId: string) => void;
   onDeviceListChange?: (devices: MediaDeviceInfo[]) => void;
   variant?: 'default' | 'small';
+  contentClassName?: string;
 };
 
 const selectVariants = cva(
@@ -46,6 +47,7 @@ export function DeviceSelect({
   track,
   requestPermissions,
   onMediaDeviceError,
+  contentClassName,
   // initialSelection,
   // onActiveDeviceChange,
   // onDeviceListChange,
@@ -73,9 +75,9 @@ export function DeviceSelect({
           <SelectValue className="font-mono text-sm" placeholder={`Select a ${kind}`} />
         )}
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className={contentClassName}>
         {devices.map((device) => (
-          <SelectItem key={device.deviceId} value={device.deviceId} className="font-mono text-xs">
+          <SelectItem key={device.deviceId} value={device.deviceId} className="font-mono text-xs py-1 md:py-1.5">
             {device.label}
           </SelectItem>
         ))}
