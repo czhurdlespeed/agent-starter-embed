@@ -5,10 +5,10 @@ import { useCallback } from 'react';
 import { Track } from 'livekit-client';
 import { BarVisualizer, useRemoteParticipants } from '@livekit/components-react';
 import { ChatTextIcon, PhoneDisconnectIcon } from '@phosphor-icons/react/dist/ssr';
-import { Button } from '@/components/ui/button';
 import { ChatInput } from '@/components/livekit/chat/chat-input';
 import { DeviceSelect } from '@/components/livekit/device-select';
 import { TrackToggle } from '@/components/livekit/track-toggle';
+import { Button } from '@/components/ui/button';
 import { Toggle } from '@/components/ui/toggle';
 import { UseAgentControlBarProps, useAgentControlBar } from '@/hooks/use-agent-control-bar';
 import { AppConfig } from '@/lib/types';
@@ -109,24 +109,24 @@ export function ActionBar({
             <ChatInput
               onSend={handleSendMessage}
               disabled={isInputDisabled}
-              className="w-full [&_input]:h-[23px] md:[&_input]:h-9 [&_input]:text-[9px] md:[&_input]:text-sm [&_button]:size-[23px] md:[&_button]:size-9"
+              className="w-full [&_button]:size-[23px] md:[&_button]:size-9 [&_input]:h-[23px] [&_input]:text-[9px] md:[&_input]:h-9 md:[&_input]:text-sm"
             />
           </div>
           <hr className="border-bg2 absolute inset-x-0 bottom-0 my-1 w-full" />
         </div>
       )}
 
-      <div className="flex flex-row justify-between gap-0.5 items-center min-h-0">
-        <div className="flex gap-0.5 shrink overflow-hidden min-w-0">
+      <div className="flex min-h-0 flex-row items-center justify-between gap-0.5">
+        <div className="flex min-w-0 shrink gap-0.5 overflow-hidden">
           {visibleControls.microphone && (
-            <div className="flex items-center gap-0 shrink-0">
+            <div className="flex shrink-0 items-center gap-0">
               <TrackToggle
                 variant="primary"
                 source={Track.Source.Microphone}
                 pressed={microphoneToggle.enabled}
                 disabled={microphoneToggle.pending}
                 onPressedChange={microphoneToggle.toggle}
-                className="peer/track group/track relative w-auto pr-0.5 pl-0.5 md:pr-1.5 md:pl-1.5 min-w-0 h-auto self-stretch min-h-[12px] md:min-h-7 has-[+_*]:rounded-r-none has-[+_*]:border-r-0 has-[+_*]:pr-0.5 md:has-[+_*]:pr-1 [&_svg]:size-[7px] md:[&_svg]:size-5"
+                className="peer/track group/track relative h-auto min-h-[12px] w-auto min-w-0 self-stretch pr-0.5 pl-0.5 has-[+_*]:rounded-r-none has-[+_*]:border-r-0 has-[+_*]:pr-0.5 md:min-h-7 md:pr-1.5 md:pl-1.5 md:has-[+_*]:pr-1 [&_svg]:size-[7px] md:[&_svg]:size-5"
               >
                 <BarVisualizer
                   barCount={3}
@@ -151,7 +151,7 @@ export function ActionBar({
                 onActiveDeviceChange={handleAudioDeviceChange}
                 contentClassName="min-w-0 text-xs md:text-sm py-1 z-[100]"
                 className={cn([
-                  'pl-0.5 md:pl-2 min-h-[12px] md:min-h-7 text-[7px] md:text-sm py-0 px-0.5 md:py-2 md:px-3 min-w-[28px] h-[28px] md:min-w-0 md:h-7 md:max-w-[7rem] [&_svg]:size-[7px] md:[&_svg]:size-5',
+                  'h-[28px] min-h-[12px] min-w-[28px] px-0.5 py-0 pl-0.5 text-[7px] md:h-7 md:min-h-7 md:max-w-[7rem] md:min-w-0 md:px-3 md:py-2 md:pl-2 md:text-sm [&_svg]:size-[7px] md:[&_svg]:size-5',
                   'peer-data-[state=off]/track:text-destructive-foreground',
                   'hover:text-fg1 focus:text-fg1',
                   'hover:peer-data-[state=off]/track:text-destructive-foreground focus:peer-data-[state=off]/track:text-destructive-foreground',
@@ -162,7 +162,7 @@ export function ActionBar({
           )}
 
           {capabilities.supportsVideoInput && visibleControls.camera && (
-            <div className="flex items-center gap-0 shrink-0">
+            <div className="flex shrink-0 items-center gap-0">
               <TrackToggle
                 variant="primary"
                 source={Track.Source.Camera}
@@ -170,7 +170,7 @@ export function ActionBar({
                 pending={cameraToggle.pending}
                 disabled={cameraToggle.pending}
                 onPressedChange={cameraToggle.toggle}
-                className="peer/track relative w-auto pr-0.5 pl-0.5 md:pr-1.5 md:pl-1.5 min-w-0 h-auto self-stretch min-h-[12px] md:min-h-7 disabled:opacity-100 has-[+_*]:rounded-r-none has-[+_*]:border-r-0 has-[+_*]:pr-0.5 md:has-[+_*]:pr-1 [&_svg]:size-[7px] md:[&_svg]:size-5"
+                className="peer/track relative h-auto min-h-[12px] w-auto min-w-0 self-stretch pr-0.5 pl-0.5 disabled:opacity-100 has-[+_*]:rounded-r-none has-[+_*]:border-r-0 has-[+_*]:pr-0.5 md:min-h-7 md:pr-1.5 md:pl-1.5 md:has-[+_*]:pr-1 [&_svg]:size-[7px] md:[&_svg]:size-5"
               />
               <DeviceSelect
                 size="sm"
@@ -180,7 +180,7 @@ export function ActionBar({
                 onActiveDeviceChange={handleVideoDeviceChange}
                 contentClassName="min-w-0 text-xs md:text-sm py-1 z-[100]"
                 className={cn([
-                  'pl-0.5 md:pl-2 min-h-[12px] md:min-h-7 text-[7px] md:text-sm py-0 px-0.5 md:py-2 md:px-3 min-w-[28px] h-[28px] md:min-w-0 md:h-7 md:max-w-[7rem] [&_svg]:size-[7px] md:[&_svg]:size-5',
+                  'h-[28px] min-h-[12px] min-w-[28px] px-0.5 py-0 pl-0.5 text-[7px] md:h-7 md:min-h-7 md:max-w-[7rem] md:min-w-0 md:px-3 md:py-2 md:pl-2 md:text-sm [&_svg]:size-[7px] md:[&_svg]:size-5',
                   'peer-data-[state=off]/track:text-destructive-foreground',
                   'hover:text-fg1 focus:text-fg1',
                   'hover:peer-data-[state=off]/track:text-destructive-foreground focus:peer-data-[state=off]/track:text-destructive-foreground',
@@ -190,16 +190,16 @@ export function ActionBar({
             </div>
           )}
         </div>
-        <div className="flex gap-0.5 shrink-0">
+        <div className="flex shrink-0 gap-0.5">
           {capabilities.supportsScreenShare && visibleControls.screenShare && (
-            <div className="flex items-center gap-0 shrink-0">
+            <div className="flex shrink-0 items-center gap-0">
               <TrackToggle
                 variant="secondary"
                 source={Track.Source.ScreenShare}
                 pressed={screenShareToggle.enabled}
                 disabled={screenShareToggle.pending}
                 onPressedChange={screenShareToggle.toggle}
-                className="relative size-[28px] md:size-7 shrink-0 [&_svg]:size-[7px] md:[&_svg]:size-5"
+                className="relative size-[28px] shrink-0 md:size-7 [&_svg]:size-[7px] md:[&_svg]:size-5"
               />
             </div>
           )}
@@ -212,7 +212,7 @@ export function ActionBar({
               pressed={chatOpen}
               onPressedChange={setChatOpen}
               disabled={!isAgentAvailable}
-              className="aspect-square size-[28px] md:size-7 shrink-0"
+              className="aspect-square size-[28px] shrink-0 md:size-7"
             >
               <ChatTextIcon weight="bold" className="size-[7px] md:size-3.5" />
             </Toggle>
@@ -224,7 +224,7 @@ export function ActionBar({
               size="icon"
               aria-label="End call"
               onClick={handleDisconnect}
-              className="aspect-square size-[28px] md:size-7 shrink-0"
+              className="aspect-square size-[28px] shrink-0 md:size-7"
             >
               <PhoneDisconnectIcon weight="bold" className="size-[7px] md:size-3.5" />
             </Button>

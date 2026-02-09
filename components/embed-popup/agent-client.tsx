@@ -74,11 +74,17 @@ function AgentClient({ appConfig }: EmbedFixedAgentClientProps) {
   const room = useMemo(() => new Room(), []);
   const [popupOpen, setPopupOpen] = useState(false);
   const [error, setError] = useState<EmbedErrorDetails | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isAgentConnected, setIsAgentConnected] = useState(false);
   const [popupPosition, setPopupPosition] = useState<{ x: number; y: number } | null>(null);
   const [triggerPosition, setTriggerPosition] = useState<{ x: number; y: number } | null>(null);
   const [hasBeenInCall, setHasBeenInCall] = useState(false);
-  const dragRef = useRef<{ startX: number; startY: number; startLeft: number; startTop: number } | null>(null);
+  const dragRef = useRef<{
+    startX: number;
+    startY: number;
+    startLeft: number;
+    startTop: number;
+  } | null>(null);
   const triggerDragRef = useRef<{
     startX: number;
     startY: number;
@@ -91,27 +97,24 @@ function AgentClient({ appConfig }: EmbedFixedAgentClientProps) {
   const { clearConnectionDetails, existingOrRefreshConnectionDetails } =
     useConnectionDetails(appConfig);
 
-  const handleTogglePopup = useCallback(
-    (positionWhenOpening?: { x: number; y: number }) => {
-      if (isAnimating.current) {
-        // prevent re-opening before room has disconnected
-        return;
-      }
+  const handleTogglePopup = useCallback((positionWhenOpening?: { x: number; y: number }) => {
+    if (isAnimating.current) {
+      // prevent re-opening before room has disconnected
+      return;
+    }
 
-      setError(null);
-      setPopupOpen((open) => {
-        if (open) {
-          setPopupPosition(null);
-        } else if (positionWhenOpening) {
-          setPopupPosition(positionWhenOpening);
-        } else {
-          setPopupPosition(null);
-        }
-        return !open;
-      });
-    },
-    []
-  );
+    setError(null);
+    setPopupOpen((open) => {
+      if (open) {
+        setPopupPosition(null);
+      } else if (positionWhenOpening) {
+        setPopupPosition(positionWhenOpening);
+      } else {
+        setPopupPosition(null);
+      }
+      return !open;
+    });
+  }, []);
 
   const handlePanelAnimationStart = () => {
     isAnimating.current = true;
@@ -123,7 +126,6 @@ function AgentClient({ appConfig }: EmbedFixedAgentClientProps) {
       room.disconnect();
     }
   };
-
 
   useEffect(() => {
     const onConnected = () => {
@@ -387,7 +389,7 @@ function AgentClient({ appConfig }: EmbedFixedAgentClientProps) {
         <div
           ref={triggerWrapperRef}
           className={cn(
-            'fixed z-50 cursor-grab active:cursor-grabbing touch-none',
+            'fixed z-50 cursor-grab touch-none active:cursor-grabbing',
             !triggerPosition && 'right-4 bottom-4'
           )}
           style={
@@ -437,7 +439,7 @@ function AgentClient({ appConfig }: EmbedFixedAgentClientProps) {
         className="w-[140px] md:w-[224px]"
       >
         <div
-          className="relative bg-bg1 dark:bg-bg2 border-separator1 dark:border-separator2 h-[180px] w-[140px] md:h-[288px] md:w-[224px] rounded-xl border border-solid drop-shadow-md overflow-hidden cursor-grab active:cursor-grabbing touch-none"
+          className="bg-bg1 dark:bg-bg2 border-separator1 dark:border-separator2 relative h-[180px] w-[140px] cursor-grab touch-none overflow-hidden rounded-xl border border-solid drop-shadow-md active:cursor-grabbing md:h-[288px] md:w-[224px]"
           onPointerDown={handlePopupDragStart}
           onPointerUp={handlePopupDragEnd}
           onPointerLeave={handlePopupDragEnd}

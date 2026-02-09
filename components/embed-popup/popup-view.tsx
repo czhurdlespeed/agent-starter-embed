@@ -8,7 +8,6 @@ import {
   type TrackReference,
   VideoTrack,
   useLocalParticipant,
-  useRoomContext,
   useTracks,
   useVoiceAssistant,
 } from '@livekit/components-react';
@@ -59,9 +58,11 @@ export const PopupView = ({
   onAgentTimeout,
   ref,
 }: React.ComponentProps<'div'> & PopupProps) => {
+  // Reserved for future error handling; currently unused but kept for API compatibility.
+  void onEmbedError;
+
   useDebugMode();
 
-  const room = useRoomContext();
   const {
     state: agentState,
     audioTrack: agentAudioTrack,
@@ -144,7 +145,7 @@ export const PopupView = ({
               }}
               transition={TILE_TRANSITION}
               className={cn(
-                'bg-bg1 dark:bg-bg2 pointer-events-none absolute flex aspect-square w-20 md:w-40 items-center justify-center rounded-xl md:rounded-2xl border border-transparent transition-colors',
+                'bg-bg1 dark:bg-bg2 pointer-events-none absolute flex aspect-square w-20 items-center justify-center rounded-xl border border-transparent transition-colors md:w-40 md:rounded-2xl',
                 chatOpen && 'border-separator1 dark:border-separator2 drop-shadow-2xl'
               )}
             >
@@ -220,7 +221,7 @@ export const PopupView = ({
                 trackRef={agentVideoTrack}
                 width={agentVideoTrack?.publication.dimensions?.width ?? 0}
                 height={agentVideoTrack?.publication.dimensions?.height ?? 0}
-                className="aspect-square w-10 md:w-[70px] rounded-md bg-black object-cover"
+                className="aspect-square w-10 rounded-md bg-black object-cover md:w-[70px]"
               />
             </motion.div>
           )}
@@ -256,11 +257,11 @@ export const PopupView = ({
                 trackRef={cameraTrack || screenShareTrack}
                 width={(cameraTrack || screenShareTrack)?.publication.dimensions?.width ?? 0}
                 height={(cameraTrack || screenShareTrack)?.publication.dimensions?.height ?? 0}
-className="aspect-square w-10 md:w-[70px] rounded-md bg-black object-cover"
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+                className="aspect-square w-10 rounded-md bg-black object-cover md:w-[70px]"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Action Bar */}
         <motion.div

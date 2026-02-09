@@ -134,13 +134,13 @@
 }
 
 :host {
-  --ring: #FF8200;
-  --sidebar-ring: #FF8200;
+  --ring: #ff8200;
+  --sidebar-ring: #ff8200;
 }
 
 :host(.dark) {
-  --ring: #FF8200;
-  --sidebar-ring: #FF8200;
+  --ring: #ff8200;
+  --sidebar-ring: #ff8200;
 }
 
 @theme inline {

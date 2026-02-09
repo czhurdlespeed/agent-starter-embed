@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { neon } from '@neondatabase/serverless';
+import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/neon-http';
 import { boolean, pgTable, text } from 'drizzle-orm/pg-core';
-import { eq } from 'drizzle-orm';
+import { neon } from '@neondatabase/serverless';
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
@@ -17,9 +17,7 @@ type IsUserApprovedRequestBody = {
   user_id?: string;
 };
 
-type IsUserApprovedResponseBody =
-  | { approved: boolean }
-  | { approved: boolean; error: string };
+type IsUserApprovedResponseBody = { approved: boolean } | { approved: boolean; error: string };
 
 export async function POST(req: Request) {
   if (!DATABASE_URL) {
@@ -77,4 +75,3 @@ export async function POST(req: Request) {
     return NextResponse.json(resBody, { status: 500 });
   }
 }
-

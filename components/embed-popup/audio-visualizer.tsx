@@ -17,7 +17,7 @@ export function AudioVisualizer({ agentState, audioTrack }: AudioVisualizerProps
     >
       <span
         className={cn([
-          'bg-muted min-h-4 w-4 md:min-h-6 md:w-6 rounded-full',
+          'bg-muted min-h-4 w-4 rounded-full md:min-h-6 md:w-6',
           'origin-center transition-colors duration-250 ease-linear',
           'data-[lk-highlighted=true]:bg-foreground data-[lk-muted=true]:bg-muted',
         ])}

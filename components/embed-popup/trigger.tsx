@@ -15,7 +15,12 @@ interface TriggerProps {
   startVideoMuted?: boolean;
 }
 
-export function Trigger({ error = null, popupOpen, onToggle, startVideoMuted = false }: TriggerProps) {
+export function Trigger({
+  error = null,
+  popupOpen,
+  onToggle,
+  startVideoMuted = false,
+}: TriggerProps) {
   const { state: agentState } = useVoiceAssistant();
 
   const isAgentConnecting =
@@ -46,16 +51,16 @@ export function Trigger({ error = null, popupOpen, onToggle, startVideoMuted = f
         }}
         onClick={onToggle}
         className={cn(
-          'relative m-0 block w-[140px] h-[180px] md:w-[224px] md:h-[288px] p-0 drop-shadow-md',
+          'relative m-0 block h-[180px] w-[140px] p-0 drop-shadow-md md:h-[288px] md:w-[224px]',
           'scale-100 transition-[scale] duration-300 hover:scale-[1.02] focus:scale-[1.02]',
           'rounded-xl',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8200] focus-visible:ring-offset-2'
+          'ring-2 focus-visible:ring-[#FF8200] focus-visible:ring-offset-2 focus-visible:outline-none'
         )}
       >
         {/* ring */}
         <motion.div
           className={cn(
-            'absolute inset-0 z-10 rounded-xl overflow-hidden transition-colors',
+            'absolute inset-0 z-10 overflow-hidden rounded-xl transition-colors',
             !popupOpen && 'bg-[#FF8200]',
             !error && isAgentConnecting && 'bg-bg1',
             (isAgentConnected || (error && popupOpen)) && 'bg-destructive-foreground'
@@ -64,8 +69,8 @@ export function Trigger({ error = null, popupOpen, onToggle, startVideoMuted = f
         {/* icon */}
         <div
           className={cn(
-            'relative z-20 grid place-items-center rounded-xl overflow-hidden transition-colors',
-            'w-full h-full min-w-0 min-h-0',
+            'relative z-20 grid place-items-center overflow-hidden rounded-xl transition-colors',
+            'h-full min-h-0 w-full min-w-0',
             !popupOpen && 'bg-transparent',
             !error && isAgentConnecting && 'bg-bg1',
             (isAgentConnected || (error && popupOpen)) && 'bg-destructive'
@@ -80,7 +85,11 @@ export function Trigger({ error = null, popupOpen, onToggle, startVideoMuted = f
                 exit={{ opacity: 0, y: popupOpen ? 20 : -20 }}
                 className="absolute inset-0"
               >
-                <VideoButton asChild className="size-full rounded-lg" startMuted={startVideoMuted} />
+                <VideoButton
+                  asChild
+                  className="size-full rounded-lg"
+                  startMuted={startVideoMuted}
+                />
               </motion.div>
             )}
             {(isAgentConnecting || (error && popupOpen)) && (
@@ -89,11 +98,14 @@ export function Trigger({ error = null, popupOpen, onToggle, startVideoMuted = f
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: popupOpen ? -20 : 20 }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[28px] md:size-11"
+                className="absolute top-1/2 left-1/2 size-[28px] -translate-x-1/2 -translate-y-1/2 md:size-11"
               >
                 <XIcon
                   weight="bold"
-                  className={cn('text-fg0 size-[13px] md:size-5', error && 'text-destructive-foreground')}
+                  className={cn(
+                    'text-fg0 size-[13px] md:size-5',
+                    error && 'text-destructive-foreground'
+                  )}
                 />
               </motion.div>
             )}
@@ -103,7 +115,7 @@ export function Trigger({ error = null, popupOpen, onToggle, startVideoMuted = f
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: popupOpen ? -20 : 20 }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[28px] md:size-11"
+                className="absolute top-1/2 left-1/2 size-[28px] -translate-x-1/2 -translate-y-1/2 md:size-11"
               >
                 <PhoneDisconnectIcon
                   weight="bold"
