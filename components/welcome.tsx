@@ -14,7 +14,7 @@ import { ThemeToggle } from './theme-toggle';
 const popupTestConfig = {
   ...APP_CONFIG_DEFAULTS,
   userData: {
-    user_id: '123',
+    user_id: 'GUgn2e2x6v74nN4RmeXzZC7NZFOT2Crj',
   },
 };
 
