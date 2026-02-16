@@ -7,9 +7,3 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   supportsScreenShare: false,
   isPreConnectBufferEnabled: true,
 };
-
-/* 
-userData: {
-  user_id: 'qDWdn6Vil0F16A0cNCcweyYinkFbcMba',
-},
-*/
