@@ -31,7 +31,7 @@ export function VideoButton({
 }: VideoButtonProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasPlayedWithAudio, setHasPlayedWithAudio] = useState(false);
-  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const [, setAutoplayBlocked] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [isMuted, setIsMuted] = useState(startMuted);
 
