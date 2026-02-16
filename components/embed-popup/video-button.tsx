@@ -51,7 +51,7 @@ export function VideoButton({
     video.play().catch(() => {});
   }, [audioOnFirstPlay]);
 
-  const playWithAudio = audioOnFirstPlay && !hasPlayedWithAudio && !autoplayBlocked && !isMuted;
+  const playWithAudio = audioOnFirstPlay && !hasPlayedWithAudio && !isMuted;
 
   const performMuteToggle = useCallback(() => {
     const video = videoRef.current;
